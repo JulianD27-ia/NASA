@@ -1,23 +1,183 @@
-<!doctype html>
-<html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro Basics</title>
-	</head>
-	<body>
-		<slot />
-	</body>
-</html>
+---
+const { title } = Astro.props;
+---
 
-<style>
-	html,
-	body {
-		margin: 0;
-		width: 100%;
-		height: 100%;
-	}
-</style>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>{title}</title>
+
+    <style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: Arial, sans-serif;
+    background:
+      radial-gradient(circle at top, #0f172a, #020617);
+    color: white;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  main {
+    max-width: 1100px;
+    margin: auto;
+    padding: 2rem;
+  }
+
+  nav {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    padding: 1rem 1.5rem;
+    background: rgba(15, 23, 42, 0.8);
+    border: 1px solid rgba(255,255,255,0.1);
+    backdrop-filter: blur(10px);
+    border-radius: 16px;
+  }
+
+  nav a {
+    color: #38bdf8;
+    text-decoration: none;
+    font-weight: bold;
+    transition: 0.3s;
+  }
+
+  nav a:hover {
+    color: white;
+    transform: scale(1.05);
+  }
+
+  h1 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    color: #7dd3fc;
+  }
+
+  h2 {
+    margin-bottom: 1rem;
+    color: #bae6fd;
+  }
+
+  .card {
+    background: rgba(15, 23, 42, 0.7);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 20px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    backdrop-filter: blur(12px);
+    box-shadow:
+      0 0 20px rgba(0,0,0,0.4);
+    transition: 0.3s;
+  }
+
+  .card:hover {
+    transform: translateY(-5px);
+  }
+
+  img {
+    width: 100%;
+    border-radius: 16px;
+    margin: 1.5rem 0;
+    transition: 0.4s;
+  }
+
+  img:hover {
+    transform: scale(1.01);
+  }
+
+  p {
+    line-height: 1.8;
+    color: #e2e8f0;
+  }
+
+  .date {
+    color: #94a3b8;
+    margin-bottom: 1rem;
+  }
+
+  iframe {
+    border-radius: 16px;
+    margin: 1rem 0;
+  }
+
+  @media (max-width: 768px) {
+
+    h1 {
+      font-size: 2rem;
+    }
+
+    main {
+      padding: 1rem;
+    }
+
+    .card {
+      padding: 1.2rem;
+    }
+
+  }
+
+  /* Estrellas de fondo */
+  /* Fondo estrellas */
+
+.stars,
+.twinkling {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  z-index: -1;
+}
+
+.stars {
+  background:
+    #000
+    url("https://www.transparenttextures.com/patterns/stardust.png")
+    repeat top center;
+}
+
+.twinkling {
+  background:
+    transparent
+    url("https://www.transparenttextures.com/patterns/dark-mosaic.png")
+    repeat top center;
+
+  animation: moveStars 120s linear infinite;
+  opacity: 0.4;
+}
+
+@keyframes moveStars {
+  from {
+    transform: translateY(0);
+  }
+
+  to {
+    transform: translateY(-1000px);
+  }
+}
+	</style>
+  </head>
+
+  <body>
+	<div class="stars"></div>
+	<div class="twinkling"></div>
+
+    <main>
+
+      <nav>
+        <a href="/">Imagen del día</a>
+        <a href="/archivo">Archivo NASA</a>
+      </nav>
+
+      <slot />
+
+    </main>
+  </body>
+</html>

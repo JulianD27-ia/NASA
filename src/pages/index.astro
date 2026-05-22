@@ -1,11 +1,85 @@
 ---
-import Welcome from '../components/Welcome.astro';
 import Layout from '../layouts/Layout.astro';
 
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+const API_KEY = '3xGpLgSa1XNicw5bqRk0qW8XcUXdtXfeznsai122';
+
+let apod = null;
+let error = null;
+
+try {
+
+  const res = await fetch(
+    `https://api.nasa.gov/planetary/apod?api_key=${API_KEY}`
+  );
+
+  if (!res.ok) {
+    throw new Error('No se pudo conectar con NASA');
+  }
+
+  apod = await res.json();
+
+} catch (err) {
+  // err is unknown in TS; normalize to a string
+  if (err instanceof Error) {
+    error = err.message;
+  } else {
+    error = String(err);
+  }
+}
+
+const fechaFormateada = apod?.date
+  ? new Date(apod.date).toLocaleDateString('es-ES', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    })
+  : '';
 ---
 
-<Layout>
-	<Welcome />
+<Layout title={apod?.title || 'NASA Explorer'}>
+
+  {
+    error ? (
+
+      <h1>{error}</h1>
+
+    ) : (
+
+      <div class="card">
+
+        <h1>{apod.title}</h1>
+
+        <p class="date">
+          {fechaFormateada} —
+          {apod.copyright ?? 'NASA'}
+        </p>
+
+        {
+          apod.media_type === 'image' ? (
+
+            <img
+              src={apod.url}
+              alt={apod.title}
+            />
+
+          ) : (
+
+            <iframe
+              width="100%"
+              height="500"
+              src={apod.url}
+              frameborder="0"
+              allowfullscreen
+            ></iframe>
+
+          )
+        }
+
+        <p>{apod.explanation}</p>
+
+      </div>
+
+    )
+  }
+
 </Layout>

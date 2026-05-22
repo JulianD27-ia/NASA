@@ -1,0 +1,85 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const API_KEY = '3xGpLgSa1XNicw5bqRk0qW8XcUXdtXfeznsai122';
+
+const hoy = new Date();
+
+const hace5dias = new Date(hoy);
+
+hace5dias.setDate(hoy.getDate() - 5);
+
+const formatDate = (d: Date) =>
+  d.toISOString().split('T')[0];
+
+type ApodImage = {
+  title: string;
+  date: string;
+  media_type: string;
+  url: string;
+  explanation: string;
+};
+
+let imagenes: ApodImage[] = [];
+let error: string | null = null;
+
+try {
+
+  const res = await fetch(
+    `https://api.nasa.gov/planetary/apod?api_key=${API_KEY}&start_date=${formatDate(hace5dias)}&end_date=${formatDate(hoy)}`
+  );
+
+  if (!res.ok) {
+    throw new Error('Error al obtener imágenes');
+  }
+
+  imagenes = await res.json();
+
+} catch (err: unknown) {
+  if (err instanceof Error) {
+    error = err.message;
+  } else {
+    error = String(err);
+  }
+}
+---
+
+<Layout title="Archivo NASA">
+
+  <h1>Últimas imágenes NASA</h1>
+
+  {
+    error ? (
+
+      <p>{error}</p>
+
+    ) : (
+
+      imagenes.reverse().map((img) => (
+
+        <div class="card">
+
+          <h2>{img.title}</h2>
+
+          <p class="date">{img.date}</p>
+
+          {
+            img.media_type === 'image' && (
+
+              <img
+                src={img.url}
+                alt={img.title}
+              />
+
+            )
+          }
+
+          <p>{img.explanation}</p>
+
+        </div>
+
+      ))
+    )
+  }
+
+</Layout>
